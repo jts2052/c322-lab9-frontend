@@ -18,14 +18,19 @@
 
     <div id="pond"></div>
 
+    <script src="config.js"></script>
     <script>
-      let host = "http://localhost:8080";
+      let host = getHost();
       let ducks = [];
       displayTheDucks();
 
       async function getAll() {
-        let response = await fetch(host + "/ducks");
+        const headers = {"Authorization": "Bearer " + localStorage.getItem("token")};
+        let response = await fetch(host + "/ducks", { headers });
         let result = await response.json();
+        if (response.status == 401) {
+          logout();
+        }
         return result;
       }
 
